@@ -73,7 +73,7 @@ for track2 in np.linspace(1, 10, 11):
         data["sep"] = sep
         data["gap"] = gap
 
-        datalist.append([data])
+        datalist.append(data)
 
 # Create a pandas DataFrame (you can add more rows if needed)
 df = pd.DataFrame(datalist)
