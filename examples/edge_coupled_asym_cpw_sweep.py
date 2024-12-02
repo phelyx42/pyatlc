@@ -17,7 +17,7 @@ for track2 in tqdm(np.linspace(1, 10, 11)):
         track1 = 10 * u
         track2 = track2 * u
         sep = sep * u
-        gap = (track1 + track2 + sep) / 2 * 1
+        gap = (track1 * u + track2 * u + sep * u) / 2 * 1
         er = 11
 
         # Create a new image with white background (RGB: 255, 255, 255)
