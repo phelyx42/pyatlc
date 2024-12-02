@@ -1,2 +1,2 @@
 # pyatlc
-python interface for atlc
+python bmp examples for atlc
