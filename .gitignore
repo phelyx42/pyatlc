@@ -6,9 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+# atlc
+*.bin
+*.bmp
+
 # Distribution / packaging
 .Python
-build/
+ibuild/
 develop-eggs/
 dist/
 downloads/
