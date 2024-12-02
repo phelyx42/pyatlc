@@ -1,6 +1,7 @@
-import os
-
 from PIL import Image, ImageDraw, ImageOps
+import subprocess
+import re
+import pandas as pd
 
 u = int(1)
 # Define the image size, base unit it nm
@@ -36,4 +37,20 @@ image.save("output.bmp", "BMP")
 
 print("simulating ..")
 
-os.system(f"atlc -d c8c8c8={er} output.bmp ")
+result = subprocess.run(
+    f"atlc -d c8c8c8={er} output.bmp", shell=True, capture_output=True, text=True
+)
+pattern = r"(\w+)=\s*([\d\.\-]+)"
+matches = re.findall(pattern, result.stdout)
+
+# Convert matches into a dictionary
+data = dict(matches)
+
+# Optionally, add any additional data you may need (e.g., filename or version)
+data["filename"] = "output.bmp"
+data["version"] = "4.6.1"
+
+# Create a pandas DataFrame (you can add more rows if needed)
+df = pd.DataFrame([data])
+
+print(df)
