@@ -64,12 +64,12 @@ for ti, track2 in tqdm(enumerate(np.linspace(2, 10, 9))):
         )
         # Save the image as a 24-bit BMP file
         image = ImageOps.flip(image)
-        image.save(f"temp/output_{ti}_{si}.bmp", "BMP")
+        image.save(f"temp/data/output_{ti}_{si}.bmp", "BMP")
 
         # print('simulating ..')
 
         result = subprocess.run(
-            f"atlc -d c8c8c8={er} temp/output_{ti}_{si}.bmp",
+            f"atlc -d c8c8c8={er} temp/data/output_{ti}_{si}.bmp",
             shell=True,
             capture_output=True,
             text=True,
@@ -81,7 +81,7 @@ for ti, track2 in tqdm(enumerate(np.linspace(2, 10, 9))):
         data = dict(matches)
 
         # Optionally, add any additional data you may need (e.g., filename or version)
-        data["filename"] = f"temp/output_{ti}_{si}.bmp"
+        data["filename"] = f"temp/data/output_{ti}_{si}.bmp"
         data["version"] = "4.6.1"
         data["track1"] = track1
         data["track2"] = track2
@@ -92,7 +92,7 @@ for ti, track2 in tqdm(enumerate(np.linspace(2, 10, 9))):
 
 # Create a pandas DataFrame (you can add more rows if needed)
 df = pd.DataFrame(datalist)
-df.to_csv("temp/edge_coupled_cpw.csv")
+df.to_csv("temp/edge_coupled_cpw.csv", index=False)
 
 
 import pandas as pd
@@ -100,27 +100,29 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
-X = df["track2"].values
-Y = df["sep"].values
-Z = df["Zodd"].values
 
-# Create a grid for the contour plot
-X_grid, Y_grid = np.meshgrid(np.unique(X), np.unique(Y))
+for z_title in ["Zdiff", "Zcomm", "Zodd", "Zeven"]:
+    X = df["track2"].values
+    Y = df["sep"].values
+    Z = df[z_title].values
 
-# Z values in a grid shape
-Z_grid = np.zeros_like(X_grid)
+    # Create a grid for the contour plot
+    X_grid, Y_grid = np.meshgrid(np.unique(X), np.unique(Y))
 
-# Fill Z_grid with values corresponding to X and Y
-for i in range(len(X)):
-    x_idx = np.where(X_grid[0, :] == X[i])[0][0]
-    y_idx = np.where(Y_grid[:, 0] == Y[i])[0][0]
-    Z_grid[y_idx, x_idx] = Z[i]
+    # Z values in a grid shape
+    Z_grid = np.zeros_like(X_grid)
 
-# Step 5: Plot the contour
-plt.figure(figsize=(8, 6))
-contour = plt.contourf(X_grid, Y_grid, Z_grid, cmap=cm.viridis)
-plt.colorbar(contour)
-plt.xlabel("track2")
-plt.ylabel("sep")
-plt.title("Contour plot of Zeven")
-plt.show()
+    # Fill Z_grid with values corresponding to X and Y
+    for i in range(len(X)):
+        x_idx = np.where(X_grid[0, :] == X[i])[0][0]
+        y_idx = np.where(Y_grid[:, 0] == Y[i])[0][0]
+        Z_grid[y_idx, x_idx] = Z[i]
+
+    # Step 5: Plot the contour
+    plt.figure(figsize=(8, 6))
+    contour = plt.contourf(X_grid, Y_grid, Z_grid, cmap=cm.viridis)
+    plt.colorbar(contour)
+    plt.xlabel("track2")
+    plt.ylabel("sep")
+    plt.title(f"Contour plot of {z_title}")
+    plt.savefig(f'temp/output_{z_title}.png')
