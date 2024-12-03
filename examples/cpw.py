@@ -3,7 +3,7 @@ import subprocess
 import re
 import pandas as pd
 
-u = int(1)
+u = int(2)
 # Define the image size, base unit it nm
 
 hsub = 200 * u

@@ -3,15 +3,15 @@ import re
 import pandas as pd
 import subprocess
 
-u = int(1)
+u = int(2)
 # Define the image size, base unit it nm
 
 hsub = 100 * u
 width, height = 200 * u, hsub * 2
 th = 1 * u
 track1 = 10 * u
-track2 = 5 * u
-sep = 5 * u
+track2 = 2 * u
+sep = 2  * u
 gap = (track1 + track2 + sep) / 2 * 1
 er = 11
 

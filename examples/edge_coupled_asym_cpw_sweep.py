@@ -7,10 +7,10 @@ from tqdm import tqdm
 
 datalist = []
 
-u = int(1)
+u = int(2)
 # Define the image size, base unit it nm
-for track2 in tqdm(np.linspace(1, 10, 11)):
-    for sep in np.linspace(1, 10, 11):
+for track2 in tqdm(np.linspace(2, 10, 51)):
+    for sep in np.linspace(2, 10, 51):
         hsub = 100 * u
         width, height = 200 * u, hsub * 2
         th = 1 * u
