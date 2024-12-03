@@ -7,19 +7,18 @@ from tqdm import tqdm
 
 datalist = []
 
-u = int(1)
+u = int(2)
+hsub = 100 * u
+width, height = 200 * u, hsub * 2
+th = 1 * u
+track1 = 10 * u
+er = 11
 # Define the image size, base unit it nm
-for ti, track2 in tqdm(enumerate(np.linspace(2, 10, 51))):
-    for si, sep in enumerate(np.linspace(2, 10, 51)):
-        hsub = 100 * u
-        width, height = 200 * u, hsub * 2
-        th = 1 * u
-        track1 = 10 * u
-        track2 = track2 * u
+for ti, track2 in tqdm(enumerate(np.linspace(2, 10, 9))):
+    track2 = track2 * u
+    for si, sep in enumerate(np.linspace(2, 10, 9)):
         sep = sep * u
         gap = (track1 + track2 + sep) / 2
-        er = 11
-
         # Create a new image with white background (RGB: 255, 255, 255)
         image = Image.new("RGB", (width, height), (255, 255, 255))
         # Create a drawing object to draw on the image
@@ -53,7 +52,6 @@ for ti, track2 in tqdm(enumerate(np.linspace(2, 10, 51))):
             ],
             fill=(0, 0, 255),
         )
-
         # define right GND
         draw.rectangle(
             [
