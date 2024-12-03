@@ -7,17 +7,17 @@ from tqdm import tqdm
 
 datalist = []
 
-u = int(2)
+u = int(1)
 # Define the image size, base unit it nm
-for track2 in tqdm(np.linspace(2, 10, 51)):
-    for sep in np.linspace(2, 10, 51):
+for ti, track2 in tqdm(enumerate(np.linspace(2, 10, 51))):
+    for si, sep in enumerate(np.linspace(2, 10, 51)):
         hsub = 100 * u
         width, height = 200 * u, hsub * 2
         th = 1 * u
         track1 = 10 * u
         track2 = track2 * u
         sep = sep * u
-        gap = (track1 * u + track2 * u + sep * u) / 2 * 1
+        gap = (track1 + track2 + sep) / 2
         er = 11
 
         # Create a new image with white background (RGB: 255, 255, 255)
@@ -29,33 +29,49 @@ for track2 in tqdm(np.linspace(2, 10, 51)):
         draw.rectangle([0, 0, width, hsub - 1], fill=(200, 200, 200))
         # define left GND
         draw.rectangle(
-            [0, hsub, width / 2 - sep / 2 - track1 - gap, hsub + th], fill=(0, 255, 0)
+            [0, int(hsub), int(width / 2 - sep / 2 - track1 - gap), int(hsub + th)],
+            fill=(0, 255, 0),
         )
 
         # define left track, track1
         draw.rectangle(
-            [width / 2 - sep / 2 - track1, hsub, width / 2 - sep / 2, hsub + th],
+            [
+                int(width / 2 - sep / 2 - track1),
+                int(hsub),
+                int(width / 2 - sep / 2),
+                int(hsub + th),
+            ],
             fill=(255, 0, 0),
         )
         # define right track, track 2
         draw.rectangle(
-            [width / 2 + sep / 2, hsub, width / 2 + sep / 2 + track2, hsub + th],
+            [
+                int(width / 2 + sep / 2),
+                int(hsub),
+                int(width / 2 + sep / 2 + track2),
+                int(hsub + th),
+            ],
             fill=(0, 0, 255),
         )
 
         # define right GND
         draw.rectangle(
-            [width / 2 + sep / 2 + track2 + gap, hsub, width, hsub + th],
+            [
+                int(width / 2 + sep / 2 + track2 + gap),
+                int(hsub),
+                int(width),
+                int(hsub + th),
+            ],
             fill=(0, 255, 0),
         )
         # Save the image as a 24-bit BMP file
         image = ImageOps.flip(image)
-        image.save("output.bmp", "BMP")
+        image.save(f"temp/output_{ti}_{si}.bmp", "BMP")
 
         # print('simulating ..')
 
         result = subprocess.run(
-            f"atlc -d c8c8c8={er} output.bmp",
+            f"atlc -d c8c8c8={er} temp/output_{ti}_{si}.bmp",
             shell=True,
             capture_output=True,
             text=True,
@@ -67,7 +83,7 @@ for track2 in tqdm(np.linspace(2, 10, 51)):
         data = dict(matches)
 
         # Optionally, add any additional data you may need (e.g., filename or version)
-        data["filename"] = "output.bmp"
+        data["filename"] = f"temp/output_{ti}_{si}.bmp"
         data["version"] = "4.6.1"
         data["track1"] = track1
         data["track2"] = track2
@@ -78,7 +94,7 @@ for track2 in tqdm(np.linspace(2, 10, 51)):
 
 # Create a pandas DataFrame (you can add more rows if needed)
 df = pd.DataFrame(datalist)
-df.to_csv("edge_coupled_cpw.csv")
+df.to_csv("temp/edge_coupled_cpw.csv")
 
 
 import pandas as pd

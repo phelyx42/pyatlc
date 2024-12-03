@@ -10,9 +10,9 @@ hsub = 100 * u
 width, height = 200 * u, hsub * 2
 th = 1 * u
 track1 = 10 * u
-track2 = 2 * u
-sep = 2  * u
-gap = (track1 + track2 + sep) / 2 * 1
+track2 = 5 * u
+sep = 1 * u
+gap = (track1 + track2 + sep) / 2
 er = 11
 
 # Create a new image with white background (RGB: 255, 255, 255)
@@ -24,23 +24,35 @@ draw = ImageDraw.Draw(image)
 draw.rectangle([0, 0, width, hsub - 1], fill=(200, 200, 200))
 # define left GND
 draw.rectangle(
-    [0, hsub, width / 2 - sep / 2 - track1 - gap, hsub + th], fill=(0, 255, 0)
+    [0, int(hsub), int(width / 2 - sep / 2 - track1 - gap), int(hsub + th)],
+    fill=(0, 255, 0),
 )
 
 # define left track, track1
 draw.rectangle(
-    [width / 2 - sep / 2 - track1, hsub, width / 2 - sep / 2, hsub + th],
+    [
+        int(width / 2 - sep / 2 - track1),
+        int(hsub),
+        int(width / 2 - sep / 2),
+        int(hsub + th),
+    ],
     fill=(255, 0, 0),
 )
 # define right track, track 2
 draw.rectangle(
-    [width / 2 + sep / 2, hsub, width / 2 + sep / 2 + track2, hsub + th],
+    [
+        int(width / 2 + sep / 2),
+        int(hsub),
+        int(width / 2 + sep / 2 + track2),
+        int(hsub + th),
+    ],
     fill=(0, 0, 255),
 )
 
 # define right GND
 draw.rectangle(
-    [width / 2 + sep / 2 + track2 + gap, hsub, width, hsub + th], fill=(0, 255, 0)
+    [int(width / 2 + sep / 2 + track2 + gap), int(hsub), int(width), int(hsub + th)],
+    fill=(0, 255, 0),
 )
 # Save the image as a 24-bit BMP file
 image = ImageOps.flip(image)
@@ -59,7 +71,6 @@ data = dict(matches)
 
 # Optionally, add any additional data you may need (e.g., filename or version)
 data["filename"] = "output.bmp"
-data["version"] = "4.6.1"
 
 # Create a pandas DataFrame (you can add more rows if needed)
 df = pd.DataFrame([data])
