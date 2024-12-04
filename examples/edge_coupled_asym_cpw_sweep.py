@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 datalist = []
 
-u = int(2)
+u = int(6)
 hsub = 100 * u
 width, height = 200 * u, hsub * 2
 th = 1 * u
@@ -83,46 +83,13 @@ for ti, track2 in tqdm(enumerate(np.linspace(2, 10, 9))):
         # Optionally, add any additional data you may need (e.g., filename or version)
         data["filename"] = f"temp/data/output_{ti}_{si}.bmp"
         data["version"] = "4.6.1"
-        data["track1"] = track1
-        data["track2"] = track2
-        data["sep"] = sep
-        data["gap"] = gap
+        data["track1"] = track1 / u
+        data["track2"] = track2 / u
+        data["sep"] = sep / u
+        data["gap"] = gap / u
 
         datalist.append(data)
 
 # Create a pandas DataFrame (you can add more rows if needed)
 df = pd.DataFrame(datalist)
-df.to_csv("temp/edge_coupled_cpw.csv", index=False)
-
-
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import cm
-
-
-for z_title in ["Zdiff", "Zcomm", "Zodd", "Zeven"]:
-    X = df["track2"].values
-    Y = df["sep"].values
-    Z = df[z_title].values
-
-    # Create a grid for the contour plot
-    X_grid, Y_grid = np.meshgrid(np.unique(X), np.unique(Y))
-
-    # Z values in a grid shape
-    Z_grid = np.zeros_like(X_grid)
-
-    # Fill Z_grid with values corresponding to X and Y
-    for i in range(len(X)):
-        x_idx = np.where(X_grid[0, :] == X[i])[0][0]
-        y_idx = np.where(Y_grid[:, 0] == Y[i])[0][0]
-        Z_grid[y_idx, x_idx] = Z[i]
-
-    # Step 5: Plot the contour
-    plt.figure(figsize=(8, 6))
-    contour = plt.contourf(X_grid, Y_grid, Z_grid, cmap=cm.viridis)
-    plt.colorbar(contour)
-    plt.xlabel("track2")
-    plt.ylabel("sep")
-    plt.title(f"Contour plot of {z_title}")
-    plt.savefig(f'temp/output_{z_title}.png')
+df.to_csv(f"temp/edge_coupled_cpw_scale_{u}.csv", index=False)
